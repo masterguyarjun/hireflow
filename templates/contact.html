@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact HireFlow{% endblock %}
+
+{% block meta_description %}Get in touch with the HireFlow team for support or inquiries.{% endblock %}
+
+{% block content %}
+<section class="py-5>
+    <div class="container>
+        <div class="row>
+            <div class="col-md-8 mx-auto>
+                <div class="text-center mb-5>
+                    <h1 class="display-4 fw-bold>Contact Us</h1>
+                    <p class="lead>We're here to help you succeed</p>
+                </div>
+                <form method="post>
+                    {% csrf_token>
+                    <div class="row mb-3>
+                        <div class="col-md-6>
+                            <label for="id_name" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="id_name" name="name" required>
+                        </div>
+                        <div class="col-md-6>
+                            <label for="id_email" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="id_email" name="email" required>
+                        </div>
+                    </div>
+                    <div class="mb-3>
+                        <label for="id_subject" class="form-label">Subject</label>
+                        <input type="text" class="form-control" id="id_subject" name="subject" required>
+                    </div>
+                    <div class="mb-3>
+                        <label for="id_message" class="form-label">Message</label>
+                        <textarea class="form-control" id="id_message" name="message" rows="5" required></textarea>
+                    </div>
+                    <div class="d-grid>
+                        <button type="submit" class="btn btn-primary btn-lg>
+                            <i class="bi-envelope me-2"></i>Send Message
+                        </button>
+                    </div>
+                </form>
+                <div class="row mt-5>
+                    <div class="col-md-4>
+                        <div class="card h-100 shadow-sm>
+                            <div class="card-body text-center>
+                                <div class="display-4 text-primary mb-3>
+                                    <i class="bi-headset"></i>
+                                </div>
+                                <h5>Customer Support</h5>
+                                <p>Available Monday-Friday, 9AM-6PM EST</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4>
+                        <div class="card h-100 shadow-sm>
+                            <div class="card-body text-center>
+                                <div class="display-4 text-primary mb-3>
+                                    <i class="bi-globe"></i>
+                                </div>
+                                <h5>General Inquiries</h5>
+                                <p>Email us at info@hireflow.com</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4>
+                        <div class="card h-100 shadow-sm>
+                            <div class="card-body text-center>
+                                <div class="display-4 text-primary mb-3>
+                                    <i class="bi-github"></i>
+                                </div>
+                                <h5>Follow Us</h5>
+                                <p>Stay updated on our latest features and job opportunities</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

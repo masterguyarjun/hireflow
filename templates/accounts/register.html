@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block title %}Register - HireFlow{% endblock %}
+
+{% block meta_description %}Create your HireFlow account as a job seeker or employer.{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-4">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header">
+                        <h3 class="text-center">Join HireFlow</h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="{{ register_form.username.id_for_label }}" class="form-label">Username</label>
+                                {{ register_form.username }}
+                                {% if register_form.username.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ register_form.username.errors|first }}
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label for="{{ register_form.first_name.id_for_label }}" class="form-label">First Name</label>
+                                {{ register_form.first_name }}
+                                {% if register_form.first_name.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ register_form.first_name.errors|first }}
+                                </div>
+                                {% endif %}
+                            }
+                            <div class="mb-3">
+                                <label for="{{ register_form.last_name.id_for_label }}" class="form-label">Last Name</label>
+                                {{ register_form.last_name }}
+                                {% if register_form.last_name.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ register_form.last_name.errors|first }}
+                                </div>
+                                {% endif %}
+                            }
+                            <div class="mb-3">
+                                <label for="{{ register_form.email.id_for_label }}" class="form-label">Email</label>
+                                {{ register_form.email }}
+                                {% if register_form.email.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ register_form.email.errors|first }}
+                                </div>
+                                {% endif %}
+                            }
+                            <div class="mb-3">
+                                <label class="form-label">Account Type</label>
+                                <div class="form-check form-check-inline">
+                                    {{ register_form.account_type.job_seeker }}
+                                    <label class="form-check-label" for="{{ register_form.account_type.job_seeker.id_for_label }}">Job Seeker</label>
+                                </div>
+                                <div class="form-check form-check-inline ms-3">
+                                    {{ register_form.account_type.employer }}
+                                    <label class="form-check-label" for="{{ register_form.account_type.employer.id_for_label }}">Employer</label>
+                                </div>
+                                {% if register_form.account_type.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ register_form.account_type.errors|first }}
+                                </div>
+                                {% endif %}
+                            }
+                            <div class="mb-3">
+                                <label for="{{ register_form.password1.id_for_label }}" class="form-label">Password</label>
+                                {{ register_form.password1 }}
+                                {% if register_form.password1.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ register_form.password1.errors|first }}
+                                </div>
+                                {% endif %}
+                            }
+                            <div class="mb-3">
+                                <label for="{{ register_form.password2.id_for_label }}" class="form-label">Confirm Password</label>
+                                {{ register_form.password2 }}
+                                {% if register_form.password2.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ register_form.password2.errors|first }}
+                                </div>
+                                {% endif %}
+                            }
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="bi-person-plus me-2"></i>Create Account
+                                </button>
+                            </div>
+                        </form>
+                        <div class="text-center mt-3">
+                            <p class="mb-1">Already have an account? <a href="{% url 'user_accounts:login' %}" class="text-decoration-none">Sign In</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

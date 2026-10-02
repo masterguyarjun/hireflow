@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+{% block title %}HireFlow - Find opportunities. Hire talent. Grow together.{% endblock %}
+
+{% block meta_description %}Modern job portal connecting job seekers with employers. Find your dream job or hire top talent.{% endblock %}
+
+{% block content %}
+<section class="hero bg-gradient-primary text-white py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h1 class="display-4 fw-bold">Find opportunities. Hire talent. Grow together.</h1>
+                <p class="lead">Modern job portal connecting talented professionals with great companies.</p>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                    <a href="{% url 'job_listings:job_list' %}" class="btn btn-light btn-lg me-3">
+                        <i class="bi-search me-2"></i>Find Jobs
+                    </a>
+                    <a href="{% url 'user_accounts:register' %}" class="btn btn-outline-light btn-lg">
+                        <i class="bi-person-plus me-2"></i>Join Now
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="bg-white rounded-3 shadow p-4">
+                    <h4>Quick Search</h5>
+                    <form action="{% url 'job_listings:job_list' %}" method="get" class="row g-3">
+                        <div class="col-12">
+                            <input type="text" name="q" class="form-control" placeholder="Job title, company, skills..." value="{{ request.GET.q|default:'' }}">
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" name="location" class="form-control" placeholder="Location" value="{{ request.GET.location|default:'' }}">
+                        </div>
+                        <div class="col-md-3">
+                            <select name="remote" class="form-select">
+                                <option value="">Any Remote Option</option>
+                                <option value="onsite" {% if request.GET.remote == 'onsite' %}selected{% endif %}>On-site</option>
+                                <option value="hybrid" {% if request.GET.remote == 'hybrid' %}selected{% endif %}>Hybrid</option>
+                                <option value="remote" {% if request.GET.remote == 'remote' %}selected{% endif %}>Remote</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select name="employment_type" class="form-select">
+                                <option value="">Any Employment Type</option>
+                                <option value="full_time" {% if request.GET.employment_type == 'full_time' %}selected{% endif %}>Full Time</option>
+                                <option value="part_time" {% if request.GET.employment_type == 'part_time' %}selected{% endif %}>Part Time</option>
+                                <option value="contract" {% if request.GET.employment_type == 'contract' %}selected{% endif %}>Contract</option>
+                                <option value="internship" {% if request.GET.employment_type == 'internship' %}selected{% endif %}>Internship</option>
+                                <option value="temporary" {% if request.GET.employment_type == 'temporary' %}selected{% endif %}>Temporary</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="bi-search me-2"></i>Search Jobs
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <h2>Featured Jobs</h2>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <a href="{% url 'job_listings:job_list' %}" class="btn btn-outline-primary">View All Jobs</a>
+            </div>
+        </div>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for job in featured_jobs %}
+            <div class="col">
+                <div class="card h-100 job-card hover-shadow">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{ job.title }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ job.employer.company_name }}</h6>
+                        <div class="mb-2">
+                            <span class="badge bg-secondary me-1">{{ job.get_location_display }}</span>
+                            <span class="badge bg-info me-1">{{ job.get_employment_type_display }}</span>
+                            <span class="badge bg-success me-1">{{ job.get_remote_option_display }}</span>
+                        </div>
+                        {% if job.salary_min or job.salary_max %}
+                        <div class="mb-2">
+                            <strong class="text-dark">{{ job.salary_display }}</strong>
+                        </div>
+                        {% endif %}
+                        <p class="card-text text-truncate-2 flex-grow-1">
+                            {{ job.description|truncatewords:20 }}
+                        </p>
+                        <div class="mt-auto">
+                            <small class="text-muted">{{ job.created_at|timesince }} ago</small>
+                            <a href="{% url 'job_listings:job_detail' job.slug %}" class="btn btn-sm btn-outline-primary mt-2">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <p class="text-center text-muted py-5">No featured jobs available at the moment.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="bg-light py-5">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-4">
+                <div class="feature-box p-4">
+                    <i class="bi-graph-up-arrow display-4 text-primary mb-3"></i>
+                    <h4>Stats</h4>
+                    <p class="text-muted">Join thousands of successful matches</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-box p-4">
+                    <i class="bi-shield-lock display-4 text-primary mb-3"></i>
+                    <h4>Secure</h4>
+                    <p class="text-muted">Your data is protected with enterprise security</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-box p-4">
+                    <i class="bi-mobile-alt display-4 text-primary mb-3"></i>
+                    <h4>Mobile Friendly</h4>
+                    <p class="text-muted">Apply anytime, anywhere</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

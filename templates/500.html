@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Server Error - HireFlow{% endblock %}
+
+{% block content %}
+<section class="py-5 text-center>
+    <div class="container>
+        <div class="row>
+            <div class="col-md-6 mx-auto>
+                <div class="display-1 mb-4>
+                    <i class="bi-exclamation-octagon text-danger"></i>
+                </div>
+                <h1 class="display-4 fw-bold>500</h1>
+                <p class="lead>Server error</p>
+                <p>Something went wrong on our end. Please try again later.</p>
+                <a href="{% url 'dashboard:home' %}" class="btn btn-primary btn-lg mt-4>
+                    <i class="bi-house-door me-2"></i>Return Home
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

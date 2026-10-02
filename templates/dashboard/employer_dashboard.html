@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+
+{% block title %}Employer Dashboard - HireFlow{% endblock %}
+
+{% block meta_description %}Manage your jobs, view applicants, and track performance.{% endblock %}
+
+{% block content %}
+<section class="py-4">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="bi-speedometer2 me-2"></i>Employer Dashboard</h1>
+            <a href="{% url 'user_accounts:profile' %}" class="btn btn-outline-secondary">
+                <i class="bi-person me-2"></i>Edit Profile
+            </a>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card text-white bg-primary shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Jobs</h5>
+                        <p class="display-4 fw-bold">{{ total_jobs }}</p>
+                        <p class="text-muted">All job postings</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-info shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Active Jobs</h5>
+                        <p class="display-4 fw-bold">{{ job_stats.published|default:0 }}</p>
+                        <p class="text-muted">Currently published</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-success shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Applications</h5>
+                        <p class="display-4 fw-bold">{{ total_applications }}</p>
+                        <p class="text-muted">Total applications received</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-warning shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Shortlisted</h5>
+                        <p class="display-4 fw-bold">{{ app_stats.shortlisted|default:0 }}</p>
+                        <p class="text-muted">Shortlisted candidates</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Jobs -->
+        <div class="mb-4">
+            <h2><i class="bi-briefcase me-2"></i>Recent Job Postings</h2>
+        </div>
+        {% if jobs %}
+        <div class="row">
+            {% for job in jobs|slice:":5" %}
+            <div class="col-md-6">
+                <div class="card mb-3 shadow-sm border-0">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6>{{ job.title }}</h6>
+                                <small class="text-muted">{{ job.employer.company_name }}</small>
+                            </div>
+                            <span class="badge bg-{{ job.status|map_status_to_badge }}">{{ job.get_status_display }}</span>
+                        </div>
+                        <div class="mb-2">
+                            <small class="text-muted">{{ job.location }} • {{ job.get_employment_type_display }} • {{ job.get_experience_level_display }}</small>
+                        </div>
+                        <small class="text-muted">Posted {{ job.created_at|timesince }} ago</small>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            No job postings found. <a href="{% url 'job_listings:job_create' %}" class="alert-link">Create your first job posting</a>.
+        </div>
+        {% endif %}
+
+        <!-- Recent Applications -->
+        <div class="mb-4">
+            <h2><i class="bi-person-check me-2"></i>Recent Applications</h2>
+        </div>
+        {% if recent_applications %}
+        <div class="row">
+            {% for application in recent_applications %}
+            <div class="col-md-6">
+                <div class="card mb-3 shadow-sm border-0">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6>{{ application.job.title }}</h6>
+                                <small class="text-muted">{{ application.applicant.get_full_name|default:application.applicant.username }}</small>
+                            </div>
+                            <span class="badge bg-{{ application.status|map_status_to_badge }}">{{ application.get_status_display }}</span>
+                        </div>
+                        <div class="mb-2">
+                            <small class="text-muted">Applied {{ application.applied_at|timesince }} ago</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            No applications received yet.
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Custom filter to map status to bootstrap badge colors
+if (!Object.prototype.mapStatusToBadge) {
+    Object.prototype.mapStatusToBadge = function() {
+        const statusMap = {
+            'submitted': 'primary',
+            'under_review': 'info',
+            'shortlisted': 'warning',
+            'interview': 'secondary',
+            'rejected': 'danger',
+            'hired': 'success'
+        };
+        return statusMap[this] || 'secondary';
+    };
+}
+</script>
+{% endblock %}

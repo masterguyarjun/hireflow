@@ -1,0 +1,318 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Profile - HireFlow{% endblock %}
+
+{% block meta_description %}Update your HireFlow profile information.{% endblock %}
+
+{% block content %}
+<section class="py-4">
+    <div class="container">
+        <div class="row justify-center">
+            <div class="col-md-8">
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <h4>Edit Profile</h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {% if user_type == 'job_seeker' %}
+                            <h5>Account Information</h5>
+                            <div class="row mb-3">
+                                <label for="{{ user_form.first_name.id_for_label }}" class="col-form-label">First Name</label>
+                                <div class="col">
+                                    {{ user_form.first_name }}
+                                    {% if user_form.first_name.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ user_form.first_name.errors|first }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="{{ user_form.last_name.id_for_label }}" class="col-form-label">Last Name</label>
+                                <div class="col">
+                                    {{ user_form.last_name }}
+                                    {% if user_form.last_name.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ user_form.last_name.errors|first }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="row mb-3>
+                                <label for="{{ user_form.email.id_for_label }}" class="col-form-label">Email</label>
+                                <div class="col">
+                                    {{ user_form.email }}
+                                    {% if user_form.email.errors %}
+                                    <div class="invalid-feedback d-block>
+                                        {{ user_form.email.errors|first }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <hr class="my-4">
+                            <h5>Profile Information</h5>
+                            <div class="row mb-3>
+                                <label for="{{ profile_form.professional_headline.id_for_label }}" class="col-form-label">Professional Headline</label>
+                                <div class="col">
+                                    {{ profile_form.professional_headline }}
+                                    {% if profile_form.professional_headline.errors %}
+                                    <div class="invalid-feedback d-block>
+                                        {{ profile_form.professional_headline.errors|first }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="row mb-3>
+                                <label for="{{ profile_form.bio.id_for_label }}" class="col-form-label">Bio</label>
+                                <div class="col">
+                                    {{ profile_form.bio }}
+                                    {% if profile_form.bio.errors %}
+                                    <div class="invalid-feedback d-block>
+                                        {{ profile_form.bio.errors|first }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="row mb-3>
+                                <label for="{{ profile_form.skills.id_for_label }}" class="col-form-label">Skills</label>
+                                <div class="col">
+                                    {{ profile_form.skills }}
+                                    {% if profile_form.skills.errors %}
+                                    <div class="invalid-feedback d-block>
+                                        {{ profile_form.skills.errors|first }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="row mb-3>
+                                <label for="{{ profile_form.years_of_experience.id_for_label }}" class="col-form-label">Years of Experience</label>
+                                <div class="col">
+                                    {{ profile_form.years_of_experience }}
+                                    {% if profile_form.years_of_experience.errors %}
+                                    <div class="invalid-feedback d-block>
+                                        {{ profile_form.years_of_experience.errors|first }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div
+                            <div class="row mb-3>
+                                <label for="{{ profile_form.education.id_for_label }}" class="col-form-label">Education</label>
+                                <div class="col">
+                                    {{ profile_form.education }}
+                                    {% if profile_form.education.errors %}
+                                    <div class="invalid-feedback d-block>
+                                        {{ profile_form.education.errors|first }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="row mb-3>
+                                <label for="{{ profile_form.current_job_title.id_for_label }}" class="col-form-label">Current Job Title</label>
+                                <div class="col">
+                                    {{ profile_form.current_job_title }}
+                                    {% if profile_form.current_job_title.errors %}
+                                    <div class="invalid-feedback d-block>
+                                        {{ profile_form.current_job_title.errors|first }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div
+                            <div class="row mb-3>
+                                <label for="{{ profile_form.location.id_for_label }}" class="col-form-label">Location</label>
+                                <div class="col">
+                                    {{ profile_form.location }}
+                                    {% if profile_form.location.errors %}
+                                    <div class="invalid-feedback d-block>
+                                        {{ profile_form.location.errors|first }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div
+                            <div class="row mb-3>
+                                <label for="{{ profile_form.linkedin_url.id_for_label }}" class="col-form-label">LinkedIn URL</label>
+                                <div class="col">
+                                    {{ profile_form.linkedin_url }}
+                                    {% if profile_form.linkedin_url.errors %}
+                                    <div class="invalid-feedback d-block>
+                                        {{ profile_form.linkedin_url.errors|first }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div
+                            <div class="row mb-3>
+                                <label for="{{ profile_form.github_url.id_for_label }}" class="col-form-label">GitHub URL</label>
+                                <div class="col">
+                                    {{ profile_form.github_url }}
+                                    {% if profile_form.github_url.errors %}
+                                    <div class="invalid-feedback d-block>
+                                        {{ profile_form.github_url.errors|first }}
+                                    </div>
+                                    {% endif %}
+                                </div
+                            </div
+                            <div class="row mb-3>
+                                <label for="{{ profile_form.portfolio_url.id_for_label }}" class="col-form-label">Portfolio URL</label>
+                                <div class="col">
+                                    {{ profile_form.portfolio_url }}
+                                    {% if profile_form.portfolio_url.errors %}
+                                    <div class="invalid-feedback d-block>
+                                        {{ profile_form.portfolio_url.errors|first }}
+                                    </div>
+                                    {% endif %}
+                                </div
+                            </div
+                            <div class="row mb-3>
+                                <label for="{{ profile_form.profile_photo.id_for_label }}" class="col-form-label">Profile Photo</label>
+                                <div class="col">
+                                    {{ profile_form.profile_photo }}
+                                    {% if profile_form.profile_photo.errors %}
+                                    <div class="invalid-feedback d-block>
+                                        {{ profile_form.profile_photo.errors|first }}
+                                    </div>
+                                    {% endif %}
+                                </div
+                            </div
+                            {% else %}
+                            <h5>Account Information</h5>
+                            <div class="row mb-3>
+                                <label for="{{ user_form.first_name.id_for_label }}" class="col-form-label">First Name</label>
+                                <div class="col">
+                                    {{ user_form.first_name }}
+                                    {% if user_form.first_name.errors %}
+                                    <div class="invalid-feedback d-block>
+                                        {{ user_form.first_name.errors|first }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="row mb-3>
+                                <label for="{{ user_form.last_name.id_for_label }}" class="col-form-label">Last Name</label>
+                                <div class="col">
+                                    {{ user_form.last_name }}
+                                    {% if user_form.last_name.errors %}
+                                    <div class="invalid-feedback d-block>
+                                        {{ user_form.last_name.errors|first }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="row mb-3>
+                                <label for="{{ user_form.email.id_for_label }}" class="col-form-label">Email</label>
+                                <div class="col">
+                                    {{ user_form.email }}
+                                    {% if user_form.email.errors %}
+                                    <div class="invalid-feedback d-block>
+                                        {{ user_form.email.errors|first }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div
+                            <hr class="my-4>
+                            <h5>Company Information</h5>
+                            <div class="row mb-3>
+                                <label for="{{ profile_form.company_name.id_for_label }}" class="col-form-label">Company Name</label>
+                                <div class="col">
+                                    {{ profile_form.company_name }}
+                                    {% if profile_form.company_name.errors %}
+                                    <div class="invalid-feedback d-block>
+                                        {{ profile_form.company_name.errors|first }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div
+                            <div class="row mb-3>
+                                <label for="{{ profile_form.company_description.id_for_label }}" class="col-form-label">Company Description</label>
+                                <div class="col">
+                                    {{ profile_form.company_description }}
+                                    {% if profile_form.company_description.errors %}
+                                    <div class="invalid-feedback d-block>
+                                        {{ profile_form.company_description.errors|first }}
+                                    </div>
+                                    {% endif %}
+                                </div
+                            </div
+                            <div class="row mb-3>
+                                <label for="{{ profile_form.industry.id_for_label }}" class="col-form-label">Industry</label>
+                                <div class="col">
+                                    {{ profile_form.industry }}
+                                    {% if profile_form.industry.errors %}
+                                    <div class="invalid-feedback d-block>
+                                        {{ profile_form.industry.errors|first }}
+                                    </div>
+                                    {% endif %}
+                                </div
+                            </div
+                            <div class="row mb-3>
+                                <label for="{{ profile_form.company_website.id_for_label }}" class="col-form-label">Company Website</label>
+                                <div class="col">
+                                    {{ profile_form.company_website }}
+                                    {% if profile_form.company_website.errors %}
+                                    <div class="invalid-feedback d-block>
+                                        {{ profile_form.company_website.errors|first }}
+                                    </div>
+                                    {% endif %}
+                                </div
+                            </div
+                            <div class="row mb-3>
+                                <label for="{{ profile_form.company_location.id_for_label }}" class="col-form-label">Company Location</label>
+                                <div class="col">
+                                    {{ profile_form.company_location }}
+                                    {% if profile_form.company_location.errors %}
+                                    <div class="invalid-feedback d-block>
+                                        {{ profile_form.company_location.errors|first }}
+                                    </div>
+                                    {% endif %}
+                                </div
+                            </div
+                            <div class="row mb-3>
+                                <label for="{{ profile_form.contact_email.id_for_label }}" class="col-form-label">Contact Email</label>
+                                <div class="col">
+                                    {{ profile_form.contact_email }}
+                                    {% if profile_form.contact_email.errors %}
+                                    <div class="invalid-feedback d-block>
+                                        {{ profile_form.contact_email.errors|first }}
+                                    </div>
+                                    {% endif %}
+                                </div
+                            </div
+                            <div class="row mb-3>
+                                <label for="{{ profile_form.company_size.id_for_label }}" class="col-form-label">Company Size</label>
+                                <div class="col">
+                                    {{ profile_form.company_size }}
+                                    {% if profile_form.company_size.errors %}
+                                    <div class="invalid-feedback d-block>
+                                        {{ profile_form.company_size.errors|first }}
+                                    </div>
+                                    {% endif %}
+                                </div
+                            </div
+                            <div class="row mb-3>
+                                <label for="{{ profile_form.linkedin_url.id_for_label }}" class="col-form-label">LinkedIn URL</label>
+                                <div class="col">
+                                    {{ profile_form.linkedin_url }}
+                                    {% if profile_form.linkedin_url.errors %}
+                                    <div class="invalid-feedback d-block>
+                                        {{ profile_form.linkedin_url.errors|first }}
+                                    </div>
+                                    {% endif %}
+                                </div
+                            </div
+                            {% endif %}
+                            <div class="d-grid gap-2>
+                                <button type="submit" class="btn btn-primary btn-lg>
+                                    <i class="bi-save me-2"></i>Save Changes
+                                </button>
+                                <a href="{% url 'user_accounts:profile' %}" class="btn btn-outline-secondary btn-lg>
+                                    <i class="bi-x me-2"></i>Cancel
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

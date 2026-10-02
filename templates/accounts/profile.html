@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block title %}Profile - HireFlow{% endblock %}
+
+{% block meta_description %}View and manage your HireFlow profile.{% endblock %}
+
+{% block content %}
+<section class="py-4">
+    <div class="container">
+        {% if user_type == 'job_seeker' %}
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <h4>Job Seeker Profile</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                {% if profile.profile_photo %}
+                                <img src="{{ profile.profile_photo.url }}" alt="Profile Photo" class="img-fluid rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+                                {% else %}
+                                <div class="bg-light rounded-circle d-flex align-items-center justify-content-center" style="width: 150px; height: 150px;">
+                                    <i class="bi-person-circle display-4 text-secondary"></i>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-8">
+                                <h2>{{ user.get_full_name|default:user.username }}</h2>
+                                {% if profile.professional_headline %}
+                                <p class="text-muted">{{ profile.professional_headline }}</p>
+                                {% endif %}
+                                <div class="mb-3">
+                                    <strong>Contact Information:</strong>
+                                    <p>
+                                        <i class="bi-envelope me-2"></i> {{ user.email }}<br>
+                                        {% if profile.phone_number %}
+                                        <i class="bi-phone me-2"></i> {{ profile.phone_number }}<br>
+                                        {% endif %}
+                                        {% if profile.location %}
+                                        <i class="bi-geo-alt me-2"></i> {{ profile.location }}<br>
+                                        {% endif %}
+                                    </p>
+                                </div>
+                                {% if profile.bio %}
+                                <div class="mb-3">
+                                    <strong>About Me:</strong>
+                                    <p>{{ profile.bio|linebreaks }}</p>
+                                </div>
+                                {% endif %}
+                                <div class="mb-3">
+                                    <strong>Skills:</strong>
+                                    <div class="flex-wrap">
+                                        {% for skill in profile.get_skills_list %}
+                                        <span class="badge bg-light text-dark me-1 mb-1">{{ skill }}</span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <strong>Experience:</strong>
+                                    <p><strong>{{ profile.years_of_experience }}</strong> years of experience</p>
+                                </div>
+                                <div class="mb-3">
+                                    <strong>Education:</strong>
+                                    <p>{{ profile.education|linebreaks|default:"Not provided" }}</p>
+                                </div>
+                                <div class="mb-3">
+                                    <strong>Current Position:</strong>
+                                    <p>{{ profile.current_job_title|default:"Not specified" }}</p>
+                                </div>
+                                <div class="mb-3">
+                                    <strong>Profiles:</strong>
+                                    {% if profile.linkedin_url %}
+                                    <a href="{{ profile.linkedin_url }}" target="_blank" class="btn btn-outline-primary btn-sm me-1">
+                                        <i class="bi-linkedin me-1"></i> LinkedIn
+                                    </a>
+                                    {% endif %}
+                                    {% if profile.github_url %}
+                                    <a href="{{ profile.github_url }}" target="_blank" class="btn btn-outline-primary btn-sm me-1">
+                                        <i class="bi-github me-1"></i> GitHub
+                                    </a>
+                                    {% endif %}
+                                    {% if profile.portfolio_url %}
+                                    <a href="{{ profile.portfolio_url }}" target="_blank" class="btn btn-outline-primary btn-sm me-1">
+                                        <i class="bi-browser-chrome me-1"></i> Portfolio
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <h4>Employer Profile</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                {% if profile.company_logo %}
+                                <img src="{{ profile.company_logo.url }}" alt="Company Logo" class="img-fluid rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+                                {% else %}
+                                <div class="bg-light rounded-circle d-flex align-items-center justify-content-center" style="width: 150px; height: 150px;">
+                                    <i class="bi-building display-4 text-secondary"></i>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-8">
+                                <h2>{{ profile.company_name }}</h2>
+                                <p class="text-muted">{{ profile.industry|default:"Industry not specified" }}</p>
+                                <div class="mb-3">
+                                    <strong>Contact Information:</strong>
+                                    <p>
+                                        <i class="bi-envelope me-2"></i> {{ profile.contact_email }}<br>
+                                        {% if profile.company_website %}
+                                        <i class="bi-globe me-2"></i> <a href="{{ profile.company_website }}" target="_blank">{{ profile.company_website }}</a><br>
+                                        {% endif %}
+                                        {% if profile.company_location %}
+                                        <i class="bi-geo-alt me-2"></i> {{ profile.company_location }}<br>
+                                        {% endif %}
+                                    </p>
+                                </div>
+                                {% if profile.company_description %}
+                                <div class="mb-3">
+                                    <strong>Company Description:</strong>
+                                    <p>{{ profile.company_description|linebreaks }}</p>
+                                </div>
+                                {% endif %}
+                                <div class="mb-3">
+                                    <strong>Company Size:</strong>
+                                    <p>{{ profile.get_company_size_display }}</p>
+                                </div>
+                                <div class="mb-3">
+                                    <strong>Profiles:</strong>
+                                    {% if profile.linkedin_url %}
+                                    <a href="{{ profile.linkedin_url }}" target="_blank" class="btn btn-outline-primary btn-sm me-1">
+                                        <i class="bi-linkedin me-1"></i> LinkedIn
+                                    </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

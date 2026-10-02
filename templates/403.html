@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Access Denied - HireFlow{% endblock %}
+
+{% block content %}
+<section class="py-5 text-center>
+    <div class="container>
+        <div class="row>
+            <div class="col-md-6 mx-auto>
+                <div class="display-1 mb-4>
+                    <i class="bi-shield-lock text-danger"></i>
+                </div>
+                <h1 class="display-4 fw-bold>403</h1>
+                <p class="lead>Access denied</p>
+                <p>You don't have permission to access this resource.</p>
+                <a href="{% url 'dashboard:home' %}" class="btn btn-primary btn-lg mt-4>
+                    <i class="bi-house-door me-2"></i>Return Home
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

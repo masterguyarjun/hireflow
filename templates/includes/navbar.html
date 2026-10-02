@@ -1,0 +1,68 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'dashboard:home' %}">
+            <i class="bi-briefcase me-2"></i>HireFlow
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <!-- Left-aligned links -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'dashboard:home' %}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'job_listings:job_list' %}">Jobs</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'company_profiles:company_list' %}">Companies</a>
+                </li>
+
+                <!-- Right-aligned links based on authentication -->
+                {% if user.is_authenticated %}
+                    <li class="nav-item dropdown ms-3">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi-person-circle"></i>
+                            {{ user.get_full_name|default:user.username }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            {% if user.is_job_seeker %}
+                                <li><a class="dropdown-item" href="{% url 'dashboard:dashboard' %}">Dashboard</a></li>
+                                <li><a class="dropdown-item" href="{% url 'dashboard:saved_jobs' %}">Saved Jobs</a></li>
+                                <li><a class="dropdown-item" href="{% url 'job_applications:my_applications' %}">My Applications</a></li>
+                                <li><a class="dropdown-item" href="{% url 'user_accounts:profile' %}">Profile</a></li>
+                                {% if not user.is_employer %}
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="{% url 'user_accounts:edit_profile' %}">Edit Profile</a></li>
+                                {% endif %}
+                            {% elif user.is_employer %}
+                                <li><a class="dropdown-item" href="{% url 'dashboard:dashboard' %}">Dashboard</a></li>
+                                <li><a class="dropdown-item" href="{% url 'job_listings:job_create' %}">Post Job</a></li>
+                                <li><a class="dropdown-item" href="{% url 'job_listings:job_list' %}">My Jobs</a></li>
+                                <li><a class="dropdown-item" href="{% url 'job_applications:my_applications' %}">Applicants</a></li>
+                                <li><a class="dropdown-item" href="{% url 'user_accounts:profile' %}">Company Profile</a></li>
+                                {% if not user.is_job_seeker %}
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="{% url 'user_accounts:edit_profile' %}">Edit Profile</a></li>
+                                {% endif %}
+                            {% elif user.is_admin %}
+                                <li><a class="dropdown-item" href="{% url 'dashboard:dashboard' %}">Admin Dashboard</a></li>
+                                <li><a class="dropdown-item" href="/admin/">Django Admin</a></li>
+                            {% endif %}
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'user_accounts:logout' %}">Logout</a></li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'user_accounts:login' %}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'user_accounts:register' %}">Register</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>

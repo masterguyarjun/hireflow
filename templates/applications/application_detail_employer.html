@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+
+{% block title %}Application Details - HireFlow{% endblock %}
+
+{% block meta_description %}View application details for {{ application.job.title }}.{% endblock %}
+
+{% block content %}
+<section class="py-4">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="bi-file-earmark-text me-2"></i>Application Details</h1>
+            <a href="{% url 'job_listings:job_detail' application.job.slug %}" class="btn btn-outline-secondary">
+                <i class="bi-arrow-left me-2"></i>Back to Job
+            </a>
+        </div>
+
+        <div class="row">
+            <!-- Applicant Info -->
+            <div class="col-lg-6">
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header">
+                        <h4>Applicant Information</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <strong>Name:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                {{ application.applicant.get_full_name|default:application.applicant.username }}
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <strong>Email:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                {{ application.applicant.email }}
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <strong>Phone:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                {{ application.applicant.phone_number|default:"Not provided" }}
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <strong>Location:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                {{ application.job.location }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% if application.resume %}
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header">
+                        <h4>Resume</h4>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Filename:</strong> {{ application.resume.name }}</p>
+                        <a href="{{ application.resume.url }}" class="btn btn-outline-primary" target="_blank">
+                            <i class="bi-download me-2"></i>Download Resume
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if application.cover_letter %}
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header">
+                        <h4>Cover Letter</h4>
+                    </div>
+                    <div class="card-body">
+                        {{ application.cover_letter|linebreaks }}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Job Details & Status Update -->
+            <div class="col-lg-6">
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header">
+                        <h4>Job Information</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <strong>Position:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                {{ application.job.title }}
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <strong>Company:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                {{ application.job.employer.company_name }}
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <strong>Status:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                <span class="badge bg-{{ application.status|map_status_to_badge }} fs-5">{{ application.get_status_display }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header">
+                        <h4>Update Application Status</h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" id="status-form">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="status-select" class="form-label">New Status:</label>
+                                <select name="status" id="status-select" class="form-select">
+                                    {% for value, label in status_choices %}
+                                    <option value="{{ value }}" {% if application.status == value %}selected{% endif %}>{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    Update Status
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const statusForm = document.getElementById('status-form');
+    if (statusForm) {
+        statusForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const statusSelect = document.getElementById('status-select');
+            const newStatus = statusSelect.value;
+
+            fetch(`{% url 'job_applications:update_application_status' application.id %}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                body: JSON.stringify({
+                    status: newStatus
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update the badge
+                    const statusBadge = document.querySelector('.badge.fs-5');
+                    statusBadge.className = `badge bg-${data.new_status.toLowerCase().replace(' ', '_').replace('-', '_')} fs-5`;
+                    statusBadge.textContent = data.new_status;
+
+                    // Update dropdown
+                    statusSelect.value = '{{ application.status }}'; // Reset to current for visual feedback
+
+                    // Show success message
+                    alert('Application status updated successfully!');
+                } else {
+                    alert('Error updating status: ' + (data.error || 'Unknown error'));
+                }
+            })
+            .catch(error => {
+                alert('Network error: ' + error.message);
+            });
+        });
+    }
+});
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+{% endblock %}

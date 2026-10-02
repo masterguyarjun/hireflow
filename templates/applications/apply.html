@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}Apply for {{ job.title }} - HireFlow{% endblock %}
+
+{% block meta_description %}Apply for the {{ job.title }} position at {{ job.employer.company_name }}.{% endblock %}
+
+{% block content %}
+<section class="py-4">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <h4>Apply for {{ job.title }}</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h5>{{ job.title }}</h5>
+                                    <h6 class="text-muted">{{ job.employer.company_name }}</h6>
+                                </div>
+                                <div class="text-end">
+                                    {% if job.salary_min or job.salary_max %}
+                                    <span class="badge bg-success">{{ job.salary_display }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="{{ form.resume.id_for_label }}" class="form-label">Resume <span class="text-danger">*</span></label>
+                                {{ form.resume }}
+                                {% if form.resume.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.resume.errors|first }}
+                                </div>
+                                {% endif %}
+                                <small class="text-muted">Accepted formats: PDF, DOC, DOCX (Max 5MB)</small>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="{{ form.cover_letter.id_for_label }}" class="form-label">Cover Letter <span class="text-danger">*</span></label>
+                                {{ form.cover_letter }}
+                                {% if form.cover_letter.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.cover_letter.errors|first }}
+                                </div>
+                                {% endif %}
+                                <small class="text-muted">Tell us why you're interested in this position and what makes you a good fit.</small>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="bi-send me-2"></i>Submit Application
+                                </button>
+                                <a href="{% url 'job_listings:job_detail' job.slug %}" class="btn btn-outline-secondary btn-lg">
+                                    <i class="bi-x me-2"></i>Cancel
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

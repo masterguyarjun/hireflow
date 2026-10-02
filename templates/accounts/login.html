@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}Login - HireFlow{% endblock %}
+
+{% block meta_description %}Sign in to your HireFlow account.{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-4">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header">
+                        <h3 class="text-center">Welcome Back</h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="{{ login_form.username.id_for_label }}" class="form-label">Username or Email</label>
+                                {{ login_form.username }}
+                                {% if login_form.username.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ login_form.username.errors|first }}
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label for="{{ login_form.password.id_for_label }}" class="form-label">Password</label>
+                                {{ login_form.password }}
+                                {% if login_form.password.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ login_form.password.errors|first }}
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="bi-box-arrow-in-right me-2"></i>Sign In
+                                </button>
+                            </div>
+                        </form>
+                        <div class="text-center mt-3">
+                            <p class="mb-1">Don't have an account? <a href="{% url 'user_accounts:register' %}" class="text-decoration-none">Sign Up</a></p>
+                            <p class="mb-0"><a href="#" class="text-decoration-none">Forgot Password?</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

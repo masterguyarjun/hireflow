@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard - HireFlow{% endblock %}
+
+{% block meta_description %}Platform overview and management tools.{% endblock %}
+
+{% block content %}
+<section class="py-4">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="bi-speedometer2 me-2"></i>Admin Dashboard</h1>
+            <a href="/admin/" class="btn btn-outline-secondary">
+                <i class="bi-tools me-2"></i>Django Admin
+            </a>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card text-white bg-primary shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Users</h5>
+                        <p class="display-4 fw-bold">{{ stats.total_users }}</p>
+                        <p class="text-muted">Registered users</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-info shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Job Seekers</h5>
+                        <p class="display-4 fw-bold">{{ stats.job_seekers }}</p>
+                        <p class="text-muted">Users seeking employment</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-success shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Employers</h5>
+                        <p class="display-4 fw-bold">{{ stats.employers }}</p>
+                        <p class="text-muted">Companies posting jobs</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-warning shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Admins</h5>
+                        <p class="display-4 fw-bold">{{ stats.admins }}</p>
+                        <p class="text-muted">Platform administrators</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card text-white bg-secondary shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Jobs</h5>
+                        <p class="display-4 fw-bold">{{ stats.total_jobs }}</p>
+                        <p class="text-muted">All job postings</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-danger shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Published Jobs</h5>
+                        <p class="display-4 fw-bold">{{ stats.published_jobs }}</p>
+                        <p class="text-muted">Currently active listings</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-light text-dark shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Applications</h5>
+                        <p class="display-4 fw-bold">{{ stats.total_applications }}</p>
+                        <p class="text-muted">Job applications received</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-success shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Recent Activity</h5>
+                        <p class="text-muted">See below for details</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="mb-4">
+            <h2><i class="bi-clock-history me-2"></i>Recent Activity</h2>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <h5>New Users</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if recent_users %}
+                        <ul class="list-unstyled">
+                            {% for user in recent_users %}
+                            <li class="mb-2">
+                                <div class="d-flex justify-content-between">
+                                    <span>{{ user.get_full_name|default:user.username }}</span>
+                                    <span class="text-muted small">{{ user.date_joined|timesince }} ago</span>
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <p class="text-muted">No recent users.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4>
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <h5>New Jobs</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if recent_jobs %}
+                        <ul class="list-unstyled">
+                            {% for job in recent_jobs %}
+                            <li class="mb-2">
+                                <div class="d-flex justify-content-between">
+                                    <span>{{ job.title }}</span>
+                                    <span class="text-muted small">{{ job.created_at|timesince }} ago</span>
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <p class="text-muted">No recent jobs.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4>
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <h5>New Applications</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if recent_applications %}
+                        <ul class="list-unstyled">
+                            {% for application in recent_applications %}
+                            <li class="mb-2">
+                                <div class="d-flex justify-content-between">
+                                    <span>{{ application.job.title }} at {{ application.job.employer.company_name }}</span>
+                                    <span class="text-muted small">{{ application.applied_at|timesince }} ago</span>
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <p class="text-muted">No recent applications.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

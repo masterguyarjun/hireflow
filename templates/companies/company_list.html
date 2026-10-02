@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block title %}Companies - HireFlow{% endblock %}
+
+{% block meta_description %}Discover great companies hiring on HireFlow.{% endblock %}
+
+{% block content %}
+<section class="py-4">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="bi-building me-2"></i>Companies</h1>
+            <a href="{% url 'job_listings:job_list' %}" class="btn btn-outline-secondary">
+                <i class="bi-arrow-left me-2"></i>Back to Jobs
+            </a>
+        </div>
+
+        <!-- Search and Filters -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <label for="search" class="form-label">Search companies</label>
+                <input type="text" name="q" class="form-control" id="search" placeholder="Company name, industry, location..." value="{{ request.GET.q|default:'' }}">
+            </div>
+            <div class="col-md-3">
+                <label for="industry" class="form-label">Industry</label>
+                <input type="text" name="industry" class="form-control" id="industry" placeholder="Industry" value="{{ request.GET.industry|default:'' }}">
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="bi-search me-2"></i>Search
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Count -->
+        <div class="mb-4">
+            <p class="text-muted">
+                Showing {{ page_obj.paginator.count }} company{{ page_obj.paginator.count|pluralize }}
+                {% if page_obj.has_other_pages %}
+                (page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }})
+                {% endif %}
+            </p>
+        </div>
+
+        <!-- Company Listings -->
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for company in page_obj %}
+            <div class="col">
+                <div class="card h-100 company-card hover-shadow border-0">
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="card-title fw-bold">{{ company.employer_profile.company_name }}</h5>
+                        </div>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ company.employer_profile.industry|default:"Industry not specified" }}</h6>
+                        <div class="mb-2">
+                            <span class="badge bg-secondary me-1">{{ company.employer_profile.company_location|default:"Location not specified" }}</span>
+                            {% if company.is_verified %}
+                            <span class="badge bg-success me-1">Verified</span>
+                            {% endif %}
+                        </div>
+                        <p class="card-text text-truncate-2 flex-grow-1 mb-3">
+                            {{ company.company_description|truncatewords:25|default:"No description available" }}
+                        </p>
+                        <div class="mb-2">
+                            <strong>Company Size:</strong> {{ company.get_company_size_display }}
+                        </div>
+                        {% if company.specialties %}
+                        <div class="mb-3">
+                            <strong>Specialties:</strong>
+                            <div class="flex-wrap">
+                                {% for specialty in company.get_specialties_list %}
+                                <span class="badge bg-light text-dark me-1 mb-1">{{ specialty }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="mt-auto">
+                            <small class="text-muted">
+                                <i class="bi-calendar me-1"></i> Joined {{ company.created_at|timesince }} ago
+                            </small>
+                            <a href="{% url 'company_profiles:company_detail' company.id %}" class="btn btn-sm btn-outline-primary mt-2 w-100">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info">
+                    <h5>No companies found</h5>
+                    <p>Try adjusting your search criteria.</p>
+                    {% if request.GET.q or request.GET.industry %}
+                    <a href="{% url 'company_profiles:company_list' %}" class="alert-link">
+                        Clear filters</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Pagination -->
+        {% if page_obj.has_other_pages %}
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center mt-4">
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}&page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                <li class="page-item active"><a class="page-link" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}&page={{ num }}">{{ num }}</a></li>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <li class="page-item"><a class="page-link" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}&page={{ num }}">{{ num }}</a></li>
+                {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}&page={{ page_obj.next_page_number }}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

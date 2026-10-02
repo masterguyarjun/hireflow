@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ company.employer_profile.company_name }} - HireFlow{% endblock %}
+
+{% block meta_description %}Learn more about {{ company.employer_profile.company_name }} and view their job openings.{% endblock %}
+
+{% block content %}
+<section class="py-4>
+    <div class="container>
+        <div class="d-flex justify-content-between align-items-center mb-4>
+            <h1><i class="bi-building me-2"></i>{{ company.employer_profile.company_name }}</h1>
+            <a href="{% url 'company_profiles:company_list' %}" class="btn btn-outline-secondary>
+                <i class="bi-arrow-left me-2"></i>Back to Companies
+            </a>
+        </div>
+
+        <div class="row>
+            <!-- Company Info -->
+            <div class="col-lg-8>
+                <div class="card mb-4 shadow-sm>
+                    <div class="card-header>
+                        <h4>Company Overview</h4>
+                    </div>
+                    <div class="card-body>
+                        <div class="row mb-3>
+                            <div class="col-md-4>
+                                <strong>Industry:</strong>
+                            </div>
+                            <div class="col-md-8>
+                                {{ company.employer_profile.industry|default:"Not specified" }}
+                            </div>
+                        </div>
+                        <div class="row mb-3>
+                            <div class="col-md-4>
+                                <strong>Location:</strong>
+                            </div>
+                            <div class="col-md-8>
+                                {{ company.employer_profile.company_location|default:"Not specified" }}
+                            </div>
+                        </div>
+                        <div class="row mb-3>
+                            <div class="col-md-4>
+                                <strong>Company Size:</strong>
+                            </div>
+                            <div class="col-md-8>
+                                {{ company.get_company_size_display }}
+                            </div>
+                        </div>
+                        <div class="row mb-3>
+                            <div class="col-md-4>
+                                <strong>Website:</strong>
+                            </div>
+                            <div class="col-md-8>
+                                {% if company.employer_profile.company_website %}
+                                <a href="{{ company.employer_profile.company_website }}" target="_blank" class="text-decoration-none>
+                                    {{ company.employer_profile.company_website }}
+                                </a>
+                                {% else %}
+                                Not specified
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row mb-3>
+                            <div class="col-md-4>
+                                <strong>Founded:</strong>
+                            </div>
+                            <div class="col-md-8>
+                                {% if company.founded_year %}
+                                {{ company.founded_year }}
+                                {% else %}
+                                Not specified
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row mb-3>
+                            <div class="col-md-4>
+                                <strong>LinkedIn:</strong>
+                            </div>
+                            <div class="col-md-8>
+                                {% if company.employer_profile.linkedin_url %}
+                                <a href="{{ company.employer_profile.linkedin_url }}" target="_blank" class="text-decoration-none>
+                                    {{ company.employer_profile.linkedin_url }}
+                                </a>
+                                {% else %}
+                                Not specified
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% if company.company_description %}
+                        <div class="mb-4>
+                            <strong>Company Description:</strong>
+                            <div>{{ company.company_description|linebreaks }}</div>
+                        </div>
+                        {% endif %}
+                        {% if company.specialties %}
+                        <div class="mb-4>
+                            <strong>Specialties:</strong>
+                            <div class="flex-wrap>
+                                {% for specialty in company.get_specialties_list %}
+                                <span class="badge bg-light text-dark me-1 mb-1>{{ specialty }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if company.culture_description %}
+                        <div class="mb-4>
+                            <strong>Company Culture:</strong>
+                            <div>{{ company.culture_description|linebreaks }}</div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Job Listings -->
+            <div class="col-lg-4>
+                <div class="card mb-4 shadow-sm>
+                    <div class="card-header>
+                        <h4>Current Openings</h4>
+                    </div>
+                    <div class="card-body>
+                        {% if jobs %}
+                        <div class="list-group>
+                            {% for job in jobs %}
+                            <a href="{% url 'job_listings:job_detail' job.slug %}" class="list-group-item list-group-item-action>
+                                <div class="d-flex w-100 justify-content-between>
+                                    <h5 class="mb-1>{{ job.title }}</h5>
+                                    <small>{{ job.created_at|timesince }} ago</small>
+                                </div>
+                                <p class="mb-1>{{ job.get_employment_type_display }} • {{ job.location }}</p>
+                                {% if job.salary_min or job.salary_max %}
+                                <small class="text-muted>{{ job.salary_display }}</small>
+                                {% endif %}
+                            </a>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <div class="alert alert-info>
+                            <h5>No current openings</h5>
+                            <p>This company doesn't have any active job postings at the moment.</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

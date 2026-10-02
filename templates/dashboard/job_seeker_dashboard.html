@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block title %}Job Seeker Dashboard - HireFlow{% endblock %}
+
+{% block meta_description %}Your personalized dashboard showing applications, saved jobs, and more.{% endblock %}
+
+{% block content %}
+<section class="py-4">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="bi-speedometer2 me-2"></i>Dashboard</h1>
+            <a href="{% url 'user_accounts:profile' %}" class="btn btn-outline-secondary">
+                <i class="bi-person me-2"></i>Edit Profile
+            </a>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card text-white bg-primary shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Applications</h5>
+                        <p class="display-4 fw-bold">{{ applications|length }}</p>
+                        <p class="text-muted">Total applications</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-info shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Saved Jobs</h5>
+                        <p class="display-4 fw-bold">{{ saved_jobs|length }}</p>
+                        <p class="text-muted">Bookmarked positions</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-success shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Interviews</h5>
+                        <p class="display-4 fw-bold">{{ app_stats.interview|default:0 }}</p>
+                        <p class="text-muted">Upcoming interviews</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-warning shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Shortlisted</h5>
+                        <p class="display-4 fw-bold">{{ app_stats.shortlisted|default:0 }}</p>
+                        <p class="text-muted">Shortlisted applications</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Applications -->
+        <div class="mb-4">
+            <h2><i class="bi-clock-history me-2"></i>Recent Applications</h2>
+        </div>
+        {% if applications %}
+        <div class="row">
+            {% for application in applications|slice:":5" %}
+            <div class="col-md-6">
+                <div class="card mb-3 application-card-hover border-0">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6>{{ application.job.title }}</h6>
+                                <small class="text-muted">{{ application.job.employer.company_name }}</small>
+                            </div>
+                            <span class="badge bg-{{ application.status|map_status_to_badge }}">{{ application.get_status_display }}</span>
+                        </div>
+                        <small class="text-muted">Applied {{ application.applied_at|timesince }} ago</small>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            No recent applications found.
+        </div>
+        {% endif %}
+
+        <!-- Recent Saved Jobs -->
+        <div class="mb-4">
+            <h2><i class="bi-bookmark-heart me-2"></i>Recently Saved</h2>
+        </div>
+        {% if saved_jobs %}
+        <div class="row">
+            {% for saved_job in saved_jobs|slice:":5" %}
+            <div class="col-md-6">
+                <div class="card mb-3 application-card-hover border-0">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6>{{ saved_job.job.title }}</h6>
+                                <small class="text-muted">{{ saved_job.job.employer.company_name }}</small>
+                            </div>
+                            <small class="text-muted">Saved {{ saved_job.saved_at|timesince }} ago</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            No saved jobs found.
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Custom filter to map status to bootstrap badge colors
+if (!Object.prototype.mapStatusToBadge) {
+    Object.prototype.mapStatusToBadge = function() {
+        const statusMap = {
+            'submitted': 'primary',
+            'under_review': 'info',
+            'shortlisted': 'warning',
+            'interview': 'secondary',
+            'rejected': 'danger',
+            'hired': 'success'
+        };
+        return statusMap[this] || 'secondary';
+    };
+}
+</script>
+{% endblock %}

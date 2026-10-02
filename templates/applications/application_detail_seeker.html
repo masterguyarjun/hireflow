@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block title %}Application Details - HireFlow{% endblock %}
+
+{% block meta_description %}View details of your application for {{ application.job.title }}.{% endblock %}
+
+{% block content %}
+<section class="py-4">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="bi-file-earmark-text me-2"></i>Application Details</h1>
+            <a href="{% url 'job_applications:my_applications' %}" class="btn btn-outline-secondary">
+                <i class="bi-arrow-left me-2"></i>Back to Applications
+            </a>
+        </div>
+
+        <div class="row">
+            <!-- Application Info -->
+            <div class="col-lg-8">
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header">
+                        <h4>Application Summary</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <strong>Position:</strong>
+                            </div>
+                <div class="col-md-8">
+                                {{ application.job.title }}
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <strong>Company:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                {{ application.job.employer.company_name }}
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <strong>Status:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                <span class="badge bg-{{ application.status|map_status_to_badge }} fs-5">{{ application.get_status_display }}</span>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <strong>Applied On:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                {{ application.applied_at|date:"M d, Y" }}
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <strong>Location:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                {{ application.job.location }}
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <strong>Employment Type:</strong>
+                            </div>
+                            <div class="col-md-8">
+                                {{ application.job.get_employment_type_display }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% if application.employer_notes %}
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header">
+                        <h4>Employer Notes</h4>
+                    </div>
+                    <div class="card-body">
+                        {{ application.employer_notes|linebreaks }}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Job Details -->
+            <div class="col-lg-4">
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header">
+                        <h4>Job Details</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <strong>Responsibilities:</strong>
+                            <div>{{ application.job.responsibilities|linebreaks|truncatewords:30 }}</div>
+                        </div>
+                        <div class="mb-3">
+                            <strong>Requirements:</strong>
+                            <div>{{ application.job.requirements|linebreaks|truncatewords:30 }}</div>
+                        </div>
+                        {% if application.job.benefits %}
+                        <div class="mb-3">
+                            <strong>Benefits:</strong>
+                            <div>{{ application.job.benefits|linebreaks|truncatewords:30 }}</div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
